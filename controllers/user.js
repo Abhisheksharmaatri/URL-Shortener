@@ -1,98 +1,157 @@
-//Models
+const bcryptjs = require('bcryptjs');
+const jsonwebtoken = require('jsonwebtoken');
+
+const sensitive = require('../sensitive');
+
 const User = require('../models/user');
 
-//Packages
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-
-//Controllers
-exports.createUser = async ({
-    name,
+exports.getLogin = async ({
     email,
     password
 }) => {
-    const existingUser = await User.findOne({
-        email: email
-    });
-    if (existingUser) {
-        console.log('iser: ', {
-            ...existingUser
-        })
-        const error = new Error('User already exists');
-        error.statusCode = 400;
-        return error;
-    }
-    try {
-        const hashedPW = await bcrypt.hash(password, 12);
-        const user = new User({
-            name: name,
-            email: email,
-            password: hashedPW
-        });
-        await user.save();
-        return {
-            message: 'User created successfully',
-            user: user
-        }
-    } catch (err) {
-        console.log(err);
-        err.message = 'Error in creating user';
-        err.statusCode = 500;
-        return err;
-    }
-};
-
-exports.loginUser = async ({
-    email
-}) => {
-    let user, isEqual;
+    let user;
     try {
         user = await User.findOne({
             email: email
         });
         if (!user) {
-            const error = new Error('User does not exist');
-            error.statusCode = 400;
+            const error = new Error('A user with this email could not be found.');
+            error.statusCode = 401;
+            error.success = false;
             return error;
         }
     } catch (err) {
-        console.log(err);
         err.message = 'Server Error';
-        err.statusCode = 500;
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        err.success = false;
         return err;
     }
-    const token = jwt.sign({
-        email: user.email
-    }, 'secret', {
-        expiresIn: '1h'
-    });
+    let isEqual = false;
+    try {
+        isEqual = await bcryptjs.compare(password, user.password);
+        if (!isEqual) {
+            const error = new Error('Wrong password!');
+            error.statusCode = 401;
+            error.success = false;
+            return error;
+        }
+    } catch (err) {
+        err.message = 'Server Error';
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        err.success = false;
+        return err;
+    }
+    let token;
+    try {
+        token = jsonwebtoken.sign({
+            email: user.email,
+            userId: user._id.toString()
+        }, sensitive.jwt.secret, {
+            expiresIn: '1h'
+        });
+    } catch (err) {
+        err.message = 'Server Error';
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        err.success = false;
+        return err;
+    }
     return {
-        message: 'User logged in successfully',
-        token: token
+        token: token,
+        success: true
+    }
+}
+
+exports.create = async ({
+    email,
+    name,
+    password
+}) => {
+    let user;
+    try {
+        user = await User.findOne({
+            email: email
+        });
+        if (user) {
+            const error = new Error('User already exists');
+            error.statusCode = 409;
+            error.success = false;
+            return error;
+        }
+    } catch (err) {
+        err.message = 'Server Error';
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        err.success = false;
+        return err;
+    }
+    let hashedPassword;
+    try {
+        hashedPassword = await bcryptjs.hash(password, sensitive.bcryptjs.saltRounds);
+    } catch (err) {
+        err.message = 'Server Error';
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        err.success = false;
+        return err;
+    }
+    const newUser = new User({
+        email: email,
+        name: name,
+        password: hashedPassword
+    });
+    try {
+        await newUser.save();
+    } catch (err) {
+        err.message = 'Server Error';
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        err.success = false;
+        return err;
+    }
+    return {
+        success: true
     }
 };
 
-
-exports.getUser = async (userId) => {
+exports.getUser = async ({
+    email
+}) => {
     let user;
     try {
-        user = await User.findById(userId);
+        user = await User.findOne({
+            email: email
+        }).populate('urls');
         if (!user) {
-            const error = new Error('User does not exist');
-            error.statusCode = 400;
+            const error = new Error('User not found');
+            error.statusCode = 404;
+            error.success = false;
             return error;
         }
     } catch (err) {
-        console.log(err);
         err.message = 'Server Error';
-        err.statusCode = 500;
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        err.success = false;
         return err;
     }
     return {
-        message: 'User fetched successfully',
-        email: user.email,
-        name: user.name,
-        urls: user.urls
+        success: true,
+        user: {
+            email: user.email,
+            name: user.name,
+            urls: user.urls,
+            verificationStatus: user.verificationStatus
+        }
     }
 };
 
@@ -103,22 +162,32 @@ exports.deleteUser = async ({
     try {
         user = await User.findOne({
             email: email
-        })
+        });
         if (!user) {
-            const error = new Error('User does not exist');
-            error.statusCode = 400;
+            const error = new Error('User not found');
+            error.statusCode = 404;
+            error.success = false;
             return error;
         }
-        await User.deleteOne({
-            email: email
-        });
     } catch (err) {
-        console.log(err);
         err.message = 'Server Error';
-        err.statusCode = 500;
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        err.success = false;
+        return err;
+    }
+    try {
+        await user.deleteOne();
+    } catch (err) {
+        err.message = 'Server Error';
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        err.success = false;
         return err;
     }
     return {
-        message: 'User deleted successfully'
+        success: true
     }
 };
