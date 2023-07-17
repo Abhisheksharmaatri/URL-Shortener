@@ -24,9 +24,9 @@ Request Body:
 
 ```
 {
-"email": "example@example.com",
-"name": "John Doe",
-"password": "securePassword"
+    "email": "example@example.com",
+    "name": "John Doe",
+    "password": "securePassword"
 }
 ```
 
@@ -34,9 +34,9 @@ Response:
 
 ```
 {
-"success": true,
-"message": "User signed up successfully.",
-"token": "<JWT Token>"
+    "success": true,
+    "message": "User signed up successfully.",
+    "token": "<JWT Token>"
 }
 ```
 
@@ -47,8 +47,8 @@ Request Body:
 
 ```
 {
-"email": "example@example.com",
-"password": "securePassword"
+    "email": "example@example.com",
+    "password": "securePassword"
 }
 ```
 
@@ -56,9 +56,9 @@ Response:
 
 ```
 {
-"success": true,
-"message": "User logged in successfully.",
-"token": "<JWT Token>"
+    "success": true,
+    "message": "User logged in successfully.",
+    "token": "<JWT Token>"
 }
 ```
 
@@ -71,8 +71,8 @@ Request Body:
 
 ```
 {
-"longUrl": "https://example.com/some/very/long/url",
-"userId": "<User ID>"
+    "longUrl": "https://example.com/some/very/long/url",
+    "userId": "<User ID>"
 }
 ```
 
@@ -80,7 +80,7 @@ Response:
 
 ```
 {
-"message": "Url created successfully"
+    "message": "Url created successfully"
 }
 ```
 
@@ -91,8 +91,8 @@ Response:
 
 ```
 {
-"message": "Url fetched successfully",
-"url": "https://example.com/some/very/long/url"
+    "message": "Url fetched successfully",
+    "url": "https://example.com/some/very/long/url"
 }
 ```
 
@@ -103,7 +103,7 @@ Request Body:
 
 ```
 {
-"urlId": "<URL ID>"
+    "urlId": "<URL ID>"
 }
 ```
 
@@ -111,7 +111,7 @@ Response:
 
 ```
 {
-"message": "Url deleted successfully"
+    "message": "Url deleted successfully"
 }
 ```
 
@@ -124,21 +124,21 @@ Response:
 
 ```
 {
-"success": true,
-"message": "User fetched successfully.",
-"user": {
-"email": "example@example.com",
-"name": "John Doe",
-"urls": [
-{
-"longUrl": "https://example.com/some/very/long/url",
-"shortUrl": "https://shrt.io/AbCdEf",
-"expirationDate": "2023-12-31"
-},
-// More shortened URLs...
-],
-"verificationStatus": true
-}
+    "success": true,
+    "message": "User fetched successfully.",
+    "user": {
+        "email": "example@example.com",
+        "name": "John Doe",
+        "urls": [
+            {
+            "longUrl": "https://example.com/some/very/long/url",
+            "shortUrl": "https://shrt.io/AbCdEf",
+            "expirationDate": "2023-12-31"
+            },
+            // More shortened URLs...
+        ],
+        "verificationStatus": true
+    }
 }
 ```
 
@@ -149,8 +149,8 @@ Response:
 
 ```
 {
-"success": true,
-"message": "User deleted successfully."
+    "success": true,
+    "message": "User deleted successfully."
 }
 ```
 
@@ -162,16 +162,16 @@ In addition to the REST API endpoints, my URL Shortener project also provides a 
 
 ```
 query GetUser($email: String!) {
-getUser(email: $email) {
-email
-name
-verificationStatus
-urls {
-longUrl
-shortUrl
-expirationDate
-}
-}
+    getUser(email: $email) {
+        email
+        name
+        verificationStatus
+        urls {
+            longUrl
+            shortUrl
+            expirationDate
+        }
+    }
 }
 ```
 
@@ -180,11 +180,11 @@ expirationDate
 
 ```
 query GetUrl($urlCode: String!) {
-getUrl(urlCode: $urlCode) {
-longUrl
-shortUrl
-expirationDate
-}
+    getUrl(urlCode: $urlCode) {
+        longUrl
+        shortUrl
+        expirationDate
+    }
 }
 ```
 
@@ -193,9 +193,9 @@ expirationDate
 
 ```
 mutation Signup($email: String!, $name: String!, $password: String!) {
-create(email: $email, name: $name, password: $password) {
-success
-}
+    create(email: $email, name: $name, password: $password) {
+        success
+    }
 }
 ```
 
@@ -204,10 +204,10 @@ success
 
 ```
 mutation Login($email: String!, $password: String!) {
-getLogin(email: $email, password: $password) {
-token
-success
-}
+    getLogin(email: $email, password: $password) {
+        token
+        success
+    }
 }
 ```
 
@@ -216,11 +216,11 @@ success
 
 ```
 mutation CreateUrl($longUrl: String!, $userId: String!) {
-createUserUrl(longUrl: $longUrl, userId: $userId) {
-longUrl
-shortUrl
-expirationDate
-}
+    createUserUrl(longUrl: $longUrl, userId: $userId) {
+        longUrl
+        shortUrl
+        expirationDate
+    }
 }
 ```
 
@@ -229,10 +229,10 @@ expirationDate
 
 ```
 mutation DeleteUrl($urlId: String!) {
-   deleteUrl(urlId: $urlId) {
-   success
-   }
-   }
+    deleteUrl(urlId: $urlId) {
+        success
+    }
+}
 ```
 
 8. Mutation: Delete User
@@ -240,10 +240,10 @@ mutation DeleteUrl($urlId: String!) {
 
 ```
 mutation DeleteUser($email: String!) {
-   deleteUser(email: $email) {
-   success
-   }
-   }
+    deleteUser(email: $email) {
+        success
+    }
+}
 ```
 
 ## Conclusion
