@@ -4,6 +4,7 @@ const jsonwebtoken = require('jsonwebtoken');
 const sensitive = require('../sensitive');
 
 const User = require('../models/user');
+const URL = require('../models/url')
 
 exports.getLogin = async ({
     email,
@@ -162,12 +163,26 @@ exports.deleteUser = async ({
     try {
         user = await User.findOne({
             email: email
-        });
+        }).populate('urls');
         if (!user) {
             const error = new Error('User not found');
             error.statusCode = 404;
             error.success = false;
             return error;
+        }
+    } catch (err) {
+        err.message = 'Server Error';
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        err.success = false;
+        return err;
+    }
+    try {
+        for (const url of user.urls) {
+            await URL.deleteOne({
+                _id: url._id
+            });
         }
     } catch (err) {
         err.message = 'Server Error';
@@ -185,6 +200,45 @@ exports.deleteUser = async ({
             err.statusCode = 500;
         }
         err.success = false;
+        return err;
+    }
+    return {
+        success: true
+    }
+};
+
+exports.urlUpdate = async ({
+    userId
+}) => {
+    let user;
+    let filteredUrls = [];
+    const currentDate = new Date(Date.now());
+    try {
+        user = await User.findById(userId).populate('urls');
+        for (const url of user.urls) {
+            if (url.expirationDate < currentDate) {
+                await URL.deleteOne({
+                    _id: url._id
+                });
+            } else {
+                filteredUrls.push(url);
+            }
+        }
+    } catch (err) {
+        err.message = 'Server Error';
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        return err;
+    }
+    user.urls = filteredUrls;
+    try {
+        await user.save();
+    } catch (err) {
+        err.message = 'Server Error';
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
         return err;
     }
     return {

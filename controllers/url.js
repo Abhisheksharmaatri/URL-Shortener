@@ -8,6 +8,8 @@ const URL = require('../models/url');
 const User = require('../models/user');
 const sensitive = require('../sensitive');
 
+const UserContoller = require('./user');
+
 exports.createUrl = async ({
     longUrl,
     userId
@@ -39,7 +41,7 @@ exports.createUrl = async ({
     }
     const urlCode = uuidv4().split('-')[0].toString();
     const shortUrl = `${sensitive.service.url}${urlCode}`;
-    const expirationDate = new Date(Date.now() + 1000 * 60 * 60 * 24 * 7);
+    const expirationDate = new Date(Date.now() + 5000) // + 1000 * 60 * 60 * 24 * 7);
 
     const url = new URL({
         longUrl: longUrl,
@@ -50,6 +52,21 @@ exports.createUrl = async ({
     });
     try {
         await url.save();
+        const result = await UserContoller.urlUpdate({
+            userId: user._id
+        });
+        if (!result.success) {
+            return next(result);
+        }
+    } catch (err) {
+        err.message = 'Server Error';
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        err.success = false;
+        return err;
+    }
+    try {
         user.urls.push(url);
         await user.save();
     } catch (err) {
