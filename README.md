@@ -251,3 +251,13 @@ mutation DeleteUser($email: String!) {
 My URL Shortener project provides a convenient and secure way for users to manage and share long URLs. It's powered by a robust backend built with Node.js, Express.js, and MongoDB, ensuring high performance and scalability. With features like user authentication, URL creation, retrieval, and deletion, this project is ready to be integrated into various web applications and services.
 
 Thank you for exploring my URL Shortener project. I hope you found it interesting and inspiring. Feel free to contribute, fork, or use it as a reference for your own projects. Happy coding! 🚀
+
+```
+Url Shortener API | Node.js, Express.js, JWT, GrapqhQL, Bcrypt.js, uuid
+Developed URL Shortener API with Node.js, Express.js, MongoDB, JWT, Bcrypt.js.
+Implemented user authentication with JWT and secure password hashing.
+Utilized MongoDB and Mongoose for data storage and modeling.
+Created RESTful API endpoints for URL management (CRUD operations).
+Added GraphQL support for efficient data retrieval.
+Github link: https://github.com/Abhisheksharmaatri/URL-Shortener
+```
