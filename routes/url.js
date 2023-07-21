@@ -9,7 +9,7 @@ const urlController = require('../controllers/url');
 router.post('/create', auth, async (req, res, next) => {
     const result = await urlController.createUrl({
         longUrl: req.body.longUrl,
-        userId: req.user.userId
+        email: req.user.email
     });
     if (!result.success) {
         return next(result);
@@ -35,7 +35,7 @@ router.post('/create', auth, async (req, res, next) => {
 router.delete('/delete', auth, async (req, res, next) => {
     const result = await urlController.deleteUrl({
         urlId: req.body.urlId,
-        userId: req.user.userId
+        email: req.user.email
     });
     if (!result.success) {
         return next(result);

@@ -156,7 +156,7 @@ exports.getUser = async ({
     }
 };
 
-exports.deleteUser = async ({
+exports.delete = async ({
     email
 }) => {
     let user;
@@ -208,13 +208,15 @@ exports.deleteUser = async ({
 };
 
 exports.urlUpdate = async ({
-    userId
+    email
 }) => {
     let user;
     let filteredUrls = [];
     const currentDate = new Date(Date.now());
     try {
-        user = await User.findById(userId).populate('urls');
+        user = await User.findOne({
+            email: email
+        }).populate('urls');
         for (const url of user.urls) {
             if (url.expirationDate < currentDate) {
                 await URL.deleteOne({

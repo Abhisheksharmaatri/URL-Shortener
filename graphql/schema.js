@@ -1,5 +1,5 @@
 const {
-    buildSchema
+  buildSchema
 } = require('graphql');
 
 module.exports = buildSchema(`
@@ -16,20 +16,12 @@ module.exports = buildSchema(`
     expirationDate: String!
   }
 
+  type message{
+    success:String!
+  }
+
   type LoginResponse {
     token: String
-    success: String!
-  }
-
-  type SignupResponse {
-    success: String!
-  }
-
-  type DeleteUserResponse {
-    success: String!
-  }
-
-  type DeleteUrlResponse {
     success: String!
   }
 
@@ -40,10 +32,10 @@ module.exports = buildSchema(`
   }
 
   type RootMutation {
-    create(email: String!, name: String!, password: String!): SignupResponse
-    createUserUrl(longUrl: String!, userId: String!): UrlOutputData
-    deleteUser(email: String!): DeleteUserResponse
-    deleteUrl(urlId: String!): DeleteUrlResponse
+    create(email: String!, name: String!, password: String!): message
+    createUserUrl(longUrl: String!, email: String!): message
+    deleteUser(email: String!): message
+    deleteUrl(urlId: String!): message
   }
 
   schema {

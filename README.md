@@ -154,97 +154,105 @@ Response:
 }
 ```
 
-GraphQL Queries
-In addition to the REST API endpoints, my URL Shortener project also provides a GraphQL API for more flexible data retrieval. Below are the supported GraphQL queries:
+## GraphQL Queries
+
+In addition to the REST API endpoints, the URL Shortener project also provides a GraphQL API for more flexible data retrieval. This API allows you to query user details and URL information. Below are the supported GraphQL queries:
 
 1. Query: Get User Details
+
    Retrieve the details of a user based on their email.
 
-```
-query GetUser($email: String!) {
-    getUser(email: $email) {
-        email
-        name
-        verificationStatus
-        urls {
-            longUrl
-            shortUrl
-            expirationDate
-        }
-    }
-}
-```
+   ````{
+   getUser(email: $email) {
+       email
+       name
+       urls {
+       longUrl
+       shortUrl
+       expirationDate
+       }
+       verificationStatus
+   }
+   }```
+
+   Variables
+   email: The email of the user you want to retrieve information for.
+
+   ````
 
 2. Query: Get URL Details
-   Retrieve the details of a short URL based on the URL code.
+   Retrieve the details of a URL based on its URL code.
 
-```
-query GetUrl($urlCode: String!) {
-    getUrl(urlCode: $urlCode) {
-        longUrl
-        shortUrl
-        expirationDate
-    }
+```{
+getUrl(urlCode: $urlCode) {
+longUrl
+shortUrl
+expirationDate
+}
 }
 ```
 
-3. Mutation: User Signup
-   Create a new user account using GraphQL mutation.
+Variables
+urlCode: The unique code of the URL you want to retrieve information for.
 
-```
-mutation Signup($email: String!, $name: String!, $password: String!) {
+## GraphQL Mutations
+
+The GraphQL API also provides mutations to perform create and delete operations. Below are the supported GraphQL mutations:
+
+1.  Mutation: Create User
+    Create a new user.
+
+    ````mutation{
     create(email: $email, name: $name, password: $password) {
-        success
+    success
     }
-}
-```
+    }```
+    Variables
+    email: The email of the new user.
+    name: The name of the new user.
+    password: The password of the new user.
+    ````
 
-4. Mutation: User Login
-   Log in an existing user using GraphQL mutation.
+2.  Mutation: Create User URL
+    Create a new URL for a specific user.
 
-```
-mutation Login($email: String!, $password: String!) {
-    getLogin(email: $email, password: $password) {
-        token
-        success
+    ````mutation {
+    createUserUrl(longUrl: $longUrl, email: $email) {
+    success
     }
-}
-```
+    }```
+    Variables
+    longUrl: The original (long) URL to be shortened.
+    email: The email of the user who wants to create the URL.
 
-5. Mutation: Create URL
-   Create a shortened URL for the authenticated user using GraphQL mutation.
+    ````
 
-```
-mutation CreateUrl($longUrl: String!, $userId: String!) {
-    createUserUrl(longUrl: $longUrl, userId: $userId) {
-        longUrl
-        shortUrl
-        expirationDate
-    }
-}
-```
+3.  Mutation: Delete User
+    Delete a user based on their email.
 
-6. Mutation: Delete URL
-   Delete a previously created short URL for the authenticated user using GraphQL mutation.
-
-```
-mutation DeleteUrl($urlId: String!) {
-    deleteUrl(urlId: $urlId) {
-        success
-    }
-}
-```
-
-8. Mutation: Delete User
-   Delete the authenticated user's account and all associated shortened URLs using GraphQL mutation.
-
-```
-mutation DeleteUser($email: String!) {
+    ````mutation {
     deleteUser(email: $email) {
-        success
+    success
     }
+    }```
+    Variables
+    email: The email of the user you want to delete.
+
+    ````
+
+4.  Mutation: Delete URL
+    Delete a URL based on its ID.
+
+````mutation {
+deleteUrl(urlId: $urlId) {
+success
 }
-```
+}```
+Variables
+urlId: The unique ID of the URL you want to delete.
+Note
+Please ensure that you have the necessary authorization and proper input values while executing these GraphQL queries and mutations. If you encounter any issues or have questions, feel free to reach out to the development team for assistan
+````
 
 ## Conclusion
 
@@ -253,6 +261,7 @@ My URL Shortener project provides a convenient and secure way for users to manag
 Thank you for exploring my URL Shortener project. I hope you found it interesting and inspiring. Feel free to contribute, fork, or use it as a reference for your own projects. Happy coding! 🚀
 
 ```
+
 Url Shortener API | Node.js, Express.js, JWT, GrapqhQL, Bcrypt.js, uuid
 Developed URL Shortener API with Node.js, Express.js, MongoDB, JWT, Bcrypt.js.
 Implemented user authentication with JWT and secure password hashing.
@@ -260,4 +269,9 @@ Utilized MongoDB and Mongoose for data storage and modeling.
 Created RESTful API endpoints for URL management (CRUD operations).
 Added GraphQL support for efficient data retrieval.
 Github link: https://github.com/Abhisheksharmaatri/URL-Shortener
+
+```
+
+```
+
 ```

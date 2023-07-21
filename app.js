@@ -19,12 +19,12 @@ app.use(bodyParser.urlencoded({
     extended: false
 }));
 
-app.use('/', (req, res, next) => {
-    console.log('Body: ', req.body)
-    console.log('Params: ', req.params)
-    console.log('Query: ', req.query);
-    next();
-})
+// app.use('/', (req, res, next) => {
+//     console.log('Body: ', req.body)
+//     console.log('Params: ', req.params)
+//     console.log('Query: ', req.query);
+//     next();
+// })
 
 //Graphql
 const graphqlHttp = require('express-graphql').graphqlHTTP;

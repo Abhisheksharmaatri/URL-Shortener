@@ -12,11 +12,13 @@ const UserContoller = require('./user');
 
 exports.createUrl = async ({
     longUrl,
-    userId
+    email
 }) => {
     let user;
     try {
-        user = await User.findById(userId).populate('urls');
+        user = await User.findOne({
+            email: email
+        }).populate('urls');
         if (!user) {
             const error = new Error('User not found');
             error.statusCode = 404;
@@ -41,19 +43,19 @@ exports.createUrl = async ({
     }
     const urlCode = uuidv4().split('-')[0].toString();
     const shortUrl = `${sensitive.service.url}${urlCode}`;
-    const expirationDate = new Date(Date.now() + 5000) // + 1000 * 60 * 60 * 24 * 7);
+    // const expirationDate = new Date(Date.now() + 5000) // + 1000 * 60 * 60 * 24 * 7);
 
     const url = new URL({
         longUrl: longUrl,
         shortUrl: shortUrl,
         urlCode: urlCode,
-        expirationDate: expirationDate,
+        expirationDate: sensitive.url.expirationDate,
         userId: user._id
     });
     try {
         await url.save();
         const result = await UserContoller.urlUpdate({
-            userId: user._id
+            email: email
         });
         if (!result.success) {
             return next(result);

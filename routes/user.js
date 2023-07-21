@@ -44,7 +44,7 @@ router.post('/signup', async (req, res, next) => {
 });
 
 router.delete('/delete', auth, async (req, res, next) => {
-    const result = await userController.deleteUser({
+    const result = await userController.delete({
         email: req.user.email
     });
     if (result.success === false) {

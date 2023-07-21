@@ -3,66 +3,45 @@ const userController = require('../controllers/user');
 const urlController = require('../controllers/url');
 
 const resolvers = {
-    RootQuery: {
-        getLogin: async ({
-            email,
-            password
-        }) => {
-            return await userController.getLogin({
-                email,
-                password
-            });
-        },
-        getUser: async ({
-            email
-        }) => {
-            return await userController.getUser({
-                email
-            });
-        },
-        getUrl: async (_, {
-            urlCode
-        }) => {
-            return await urlController.getUrl({
-                urlCode
-            });
-        },
+    getLogin: async (args) => {
+        return await userController.getLogin({
+            email: args.email,
+            password: args.password
+        });
     },
-    RootMutation: {
-        create: async (_, args, context) => {
-            return await userController.create(args);
-        },
-        createUserUrl: async (_, {
-            longUrl,
-            userId
-        }) => {
-            return await urlController.createUrl({
-                longUrl,
-                userId
-            });
-        },
-        deleteUser: async (_, {
-            email
-        }) => {
-            return await userController.deleteUser({
-                email
-            });
-        },
-        deleteUrl: async (_, {
-            urlId
-        }) => {
-            return await urlController.deleteUrl({
-                urlId
-            });
-        },
+    getUser: async (args) => {
+        return await userController.getUser({
+            email: args.email
+        });
     },
-    UserOutputData: {
-        urls: async (user) => {
-            return await urlController.getUserUrls({
-                userId: user._id
-            });
-        },
+    getUrl: async (args) => {
+        return await urlController.getUrl({
+            urlCode: args.urlCode
+        })
     },
-};
+    create: async (args) => {
+        return await userController.create({
+            email: args.email,
+            name: args.name,
+            password: args.password
+        });
+    },
+    createUserUrl: async (args) => {
+        return await urlController.createUrl({
+            longUrl: args.longUrl,
+            email: args.email
+        });
+    },
+    deleteUser: async (args) => {
+        return await userController.delete({
+            email: args.email
+        });
+    },
+    deleteUrl: async (args) => {
+        return await urlController.deleteUrl({
+            urlId: args.urlId
+        });
+    }
+}
 
 module.exports = resolvers;
