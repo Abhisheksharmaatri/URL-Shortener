@@ -162,35 +162,36 @@ In addition to the REST API endpoints, the URL Shortener project also provides a
 
    Retrieve the details of a user based on their email.
 
-   ````{
-   getUser(email: $email) {
-       email
-       name
-       urls {
-       longUrl
-       shortUrl
-       expirationDate
-       }
-       verificationStatus
-   }
-   }```
+   ```
+   {
+    getUser(email: $email) {
+            email
+            name
+            urls {
+            longUrl
+            shortUrl
+            expirationDate
+            }
+            verificationStatus
+        }
+    }
+   ```
 
    Variables
    email: The email of the user you want to retrieve information for.
 
-   ````
-
 2. Query: Get URL Details
    Retrieve the details of a URL based on its URL code.
 
-```{
-getUrl(urlCode: $urlCode) {
-longUrl
-shortUrl
-expirationDate
-}
-}
-```
+   ```
+   {
+        getUrl(urlCode: $urlCode) {
+            longUrl
+            shortUrl
+            expirationDate
+        }
+   }
+   ```
 
 Variables
 urlCode: The unique code of the URL you want to retrieve information for.
@@ -202,57 +203,63 @@ The GraphQL API also provides mutations to perform create and delete operations.
 1.  Mutation: Create User
     Create a new user.
 
-    ````mutation{
-    create(email: $email, name: $name, password: $password) {
-    success
+    ```
+    mutation{
+        create(email: $email, name: $name, password: $password) {
+            success
+        }
     }
-    }```
+    ```
+
     Variables
     email: The email of the new user.
     name: The name of the new user.
     password: The password of the new user.
-    ````
 
 2.  Mutation: Create User URL
     Create a new URL for a specific user.
 
-    ````mutation {
-    createUserUrl(longUrl: $longUrl, email: $email) {
-    success
+    ```
+    mutation {
+        createUserUrl(longUrl: $longUrl, email: $email) {
+            success
+        }
     }
-    }```
+    ```
+
     Variables
     longUrl: The original (long) URL to be shortened.
     email: The email of the user who wants to create the URL.
 
-    ````
-
 3.  Mutation: Delete User
     Delete a user based on their email.
 
-    ````mutation {
-    deleteUser(email: $email) {
-    success
+    ```
+    mutation {
+        deleteUser(email: $email) {
+            success
+        }
     }
-    }```
+    ```
+
     Variables
     email: The email of the user you want to delete.
-
-    ````
 
 4.  Mutation: Delete URL
     Delete a URL based on its ID.
 
-````mutation {
-deleteUrl(urlId: $urlId) {
-success
-}
-}```
+    ```
+    mutation {
+        deleteUrl(urlId: $urlId) {
+            success
+        }
+    }
+    ```
+
 Variables
 urlId: The unique ID of the URL you want to delete.
 Note
 Please ensure that you have the necessary authorization and proper input values while executing these GraphQL queries and mutations. If you encounter any issues or have questions, feel free to reach out to the development team for assistan
-````
 
 ## Conclusion
 
@@ -269,9 +276,5 @@ Utilized MongoDB and Mongoose for data storage and modeling.
 Created RESTful API endpoints for URL management (CRUD operations).
 Added GraphQL support for efficient data retrieval.
 Github link: https://github.com/Abhisheksharmaatri/URL-Shortener
-
-```
-
-```
 
 ```
